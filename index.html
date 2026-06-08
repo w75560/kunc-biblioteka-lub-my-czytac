@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kunc Biblioteka</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/config.js" defer></script>
+    <script src="js/supabaseClient.js" defer></script>
+    <script src="js/app.js" defer></script>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-content">
+            <div class="header-main">
+                <h1>Kunc Biblioteka</h1>
+                <p class="header-description">
+                    Dodawaj książki do swojej biblioteki, przeglądaj listę
+                    i sprawdzaj szczegóły wybranych tytułów.
+                </p>
+            </div>
+
+            <nav class="site-nav" aria-label="Główna nawigacja">
+                <a class="nav-link active-nav" href="#home" data-view-link="home">Główna</a>
+                <a class="nav-link" href="#books" data-view-link="books">Książki</a>
+                <a class="nav-link" href="#add-book" data-view-link="add-book">Dodaj książkę</a>
+                <a class="nav-link" href="#about" data-view-link="about">O bibliotece</a>
+            </nav>
+        </div>
+    </header>
+
+    <main id="home" class="container main-layout">
+        <section id="home-screen" class="view-section active-view" data-view="home" aria-labelledby="home-title">
+            <div class="intro-section">
+                <h2 id="home-title">Strona główna</h2>
+                <p>
+                    Witaj w Kunc Biblioteka. Sprawdź ostatnio dodane książki,
+                    przejdź do pełnej listy albo dodaj własny tytuł do katalogu.
+                </p>
+            </div>
+
+            <div class="overview-section" aria-labelledby="latest-title">
+                <div class="section-heading">
+                    <h2 id="latest-title">Ostatnio dodane książki</h2>
+                    <p>Najnowsze pozycje zapisane w bibliotece.</p>
+                </div>
+
+                <div class="stats-grid" aria-label="Statystyki biblioteki">
+                    <div class="stat-card">
+                        <strong id="books-count">0</strong>
+                        <span>Książki w bazie</span>
+                    </div>
+                    <div class="stat-card">
+                        <strong id="genres-count">0</strong>
+                        <span>Gatunki</span>
+                    </div>
+                    <div class="stat-card">
+                        <strong id="newest-year">-</strong>
+                        <span>Najnowszy rok</span>
+                    </div>
+                </div>
+
+                <div id="latest-books" class="latest-list"></div>
+            </div>
+        </section>
+
+        <section id="about" class="intro-section view-section" data-view="about" aria-labelledby="about-title">
+            <h2 id="about-title">O bibliotece</h2>
+            <p>
+                To miejsce na prosty katalog książek. Możesz dodać nowy tytuł,
+                zobaczyć wszystkie zapisane książki i przejść do szczegółów wybranej pozycji.
+            </p>
+        </section>
+
+        <section id="add-book" class="form-section view-section" data-view="add-book" aria-labelledby="form-title">
+            <div class="section-heading">
+                <h2 id="form-title">Dodaj książkę</h2>
+                <p>Pola oznaczone gwiazdką są wymagane.</p>
+            </div>
+
+            <form id="book-form" class="book-form" novalidate>
+                <div class="form-grid">
+                    <div class="form-field">
+                        <label for="title">Tytuł *</label>
+                        <input id="title" name="title" type="text" autocomplete="off" required>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="author">Autor *</label>
+                        <input id="author" name="author" type="text" autocomplete="off" required>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="genre">Gatunek</label>
+                        <input id="genre" name="genre" type="text" autocomplete="off" placeholder="np. powieść">
+                    </div>
+
+                    <div class="form-field">
+                        <label for="publication_year">Rok wydania</label>
+                        <input id="publication_year" name="publication_year" type="number" min="0" max="2100" placeholder="np. 2024">
+                    </div>
+
+                    <div class="form-field form-field-wide">
+                        <label for="cover_url">Adres URL okładki</label>
+                        <input id="cover_url" name="cover_url" type="url" placeholder="https://example.com/okladka.jpg">
+                    </div>
+
+                    <div class="form-field form-field-wide">
+                        <label for="description">Opis książki *</label>
+                        <textarea id="description" name="description" rows="5" required></textarea>
+                    </div>
+                </div>
+
+                <div id="form-message" class="message" role="status" aria-live="polite"></div>
+
+                <button type="submit" class="button primary-button">Zapisz książkę</button>
+            </form>
+        </section>
+
+        <section id="books" class="books-section view-section" data-view="books" aria-labelledby="books-title">
+            <div class="section-heading">
+                <h2 id="books-title">Lista książek</h2>
+                <p>Przeglądaj, wyszukuj i otwieraj szczegóły książek.</p>
+            </div>
+
+            <div class="filter-bar">
+                <div class="form-field">
+                    <label for="search-books">Szukaj po tytule lub autorze</label>
+                    <input id="search-books" type="search" placeholder="np. Solaris albo Lem">
+                </div>
+
+                <div class="form-field">
+                    <label for="genre-filter">Filtruj gatunek</label>
+                    <select id="genre-filter">
+                        <option value="">Wszystkie gatunki</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="loading-books" class="loading">Ładowanie książek...</div>
+            <div id="books-error" class="message error-message" role="alert"></div>
+            <div id="books-list" class="books-grid"></div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>Kunc Biblioteka - katalog książek online.</p>
+        </div>
+    </footer>
+</body>
+</html>

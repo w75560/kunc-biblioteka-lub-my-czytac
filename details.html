@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Szczegóły książki - Kunc Biblioteka</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/config.js" defer></script>
+    <script src="js/supabaseClient.js" defer></script>
+    <script src="js/details.js" defer></script>
+</head>
+<body>
+    <header class="site-header compact-header">
+        <div class="container header-content">
+            <div>
+                <p class="eyebrow">Kunc Biblioteka</p>
+                <h1>Szczegóły książki</h1>
+            </div>
+            <nav class="site-nav" aria-label="Główna nawigacja">
+                <a href="index.html">Główna</a>
+                <a href="index.html#books">Książki</a>
+                <a href="index.html#add-book">Dodaj książkę</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container detail-main">
+        <div id="loading-book" class="loading">Ładowanie szczegółów książki...</div>
+        <div id="book-error" class="message error-message" role="alert"></div>
+
+        <article id="book-details" class="detail-card" hidden>
+            <div id="detail-cover" class="detail-cover"></div>
+
+            <div class="detail-content">
+                <p id="detail-genre" class="book-meta"></p>
+                <h2 id="detail-title"></h2>
+                <p id="detail-author" class="detail-author"></p>
+                <p id="detail-year" class="detail-year"></p>
+                <h3>Opis</h3>
+                <p id="detail-description" class="detail-description"></p>
+                <a class="button secondary-button" href="index.html">Wróć do listy</a>
+            </div>
+        </article>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>Kunc Biblioteka - katalog książek online.</p>
+        </div>
+    </footer>
+</body>
+</html>
